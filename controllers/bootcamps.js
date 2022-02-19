@@ -24,7 +24,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     (match) => `$${match}`
   )
   //Finding resource
-  query = Bootcamp.find(JSON.parse(queryString))
+  query = Bootcamp.find(JSON.parse(queryString)).populate('courses')
   //Select Fields
   if (req.query.select) {
     const fields = req.query.select.split(',').join(' ')
@@ -72,7 +72,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 // @route GET /api/v1/bootcamps/:id
 // @access Public
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id)
+  const bootcamp = await Bootcamp.findById(req.params.id).populate('courses')
   if (!bootcamp) {
     return next(
       new ErrorResponse(`document with _id ${req.params.id} not found`, 404)
@@ -104,13 +104,14 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @route DELETE /api/v1/bootcamps/:id
 // @access Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id)
+  const bootcamp = await Bootcamp.findById(req.params.id)
   if (!bootcamp) {
     return res.status(400).json({
       success: false,
       error: 'document with this _id not found',
     })
   }
+  bootcamp.remove()
   res.status(200).json({ success: true, bootcamp })
 })
 // @desc Get bootcamp within a radius
