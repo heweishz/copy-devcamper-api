@@ -13,7 +13,7 @@ const courseRouter = require('./courses')
 
 //Re-route into other resource routers
 router.use('/:bootcampId/courses', courseRouter)
-
+router.route('/:id/photo').put(getBootcamps.bootcampPhotoUpload)
 router
   .route('/radius/:zipcode/:distance')
   .get(getBootcamps.getBootcampsInradius)
