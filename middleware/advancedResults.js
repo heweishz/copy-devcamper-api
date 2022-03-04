@@ -38,7 +38,6 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   const total = await model.countDocuments()
   query = query.skip(startIndex).limit(limit)
   //Populate
-  console.log(populate, 'before')
   let scopePopulate = populate
   if (req.query.populate === '-1') {
     scopePopulate = false
@@ -47,7 +46,6 @@ const advancedResults = (model, populate) => async (req, res, next) => {
       query = query.populate(scopePopulate)
     }
   }
-  console.log(populate, 'after')
 
   //Executing query
   const results = await query
